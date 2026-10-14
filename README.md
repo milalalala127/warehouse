@@ -30,3 +30,10 @@
 ## Диаграмма Use Case
 
 ![Use Case](docs/diagrams/usecase.png)
+## ER-диаграмма базы данных
+
+![ER Diagram](docs/diagrams/er.png)
+
+## Схема базы данных
+
+SQL-скрипт создания таблиц и заполнения тестовыми данными: [`database/schema.sql`](database/schema.sql)

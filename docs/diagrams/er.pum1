@@ -1,0 +1,41 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+
+entity "Category" as cat {
+  * id : INTEGER <<PK>>
+  --
+  * name : TEXT
+}
+
+entity "Supplier" as sup {
+  * id : INTEGER <<PK>>
+  --
+  * name : TEXT
+  * phone : TEXT
+}
+
+entity "Product" as prod {
+  * id : INTEGER <<PK>>
+  --
+  * name : TEXT
+  * price : REAL
+  * quantity : INTEGER
+  * category_id : INTEGER <<FK>>
+  * supplier_id : INTEGER <<FK>>
+}
+
+entity "Operation" as op {
+  * id : INTEGER <<PK>>
+  --
+  * product_id : INTEGER <<FK>>
+  * type : TEXT
+  * quantity : INTEGER
+  * date : TEXT
+}
+
+cat ||--o{ prod : "1:N"
+sup ||--o{ prod : "1:N"
+prod ||--o{ op : "1:N"
+
+@enduml
