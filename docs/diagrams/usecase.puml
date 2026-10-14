@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Кладовщик" as Sklad
+actor "Администратор" as Admin
+
+package "Система учёта товаров на складе" {
+
+  usecase "Авторизация" as UC_Auth
+  usecase "Просмотр списка товаров" as UC_View
+  usecase "Приход товара" as UC_In
+  usecase "Расход товара" as UC_Out
+  usecase "Поиск товара по названию" as UC_Search
+  usecase "Добавление товара в справочник" as UC_Add
+  usecase "Удаление товара из справочника" as UC_Del
+  usecase "Отчёт «мало на складе»" as UC_Report
+
+}
+
+Sklad --> UC_View
+Sklad --> UC_In
+Sklad --> UC_Out
+Sklad --> UC_Search
+
+Admin --> UC_Add
+Admin --> UC_Del
+Admin --> UC_Report
+
+UC_View ..> UC_Auth : <<include>>
+UC_In ..> UC_Auth : <<include>>
+UC_Out ..> UC_Auth : <<include>>
+UC_Search ..> UC_Auth : <<include>>
+UC_Add ..> UC_Auth : <<include>>
+UC_Del ..> UC_Auth : <<include>>
+UC_Report ..> UC_Auth : <<include>>
+
+@enduml
