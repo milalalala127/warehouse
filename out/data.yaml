@@ -1,0 +1,26 @@
+products:
+  - id: 1
+    name: Ноутбук
+    price: 55000
+    quantity: 10
+    category_id: 1
+  - id: 2
+    name: Мышь
+    price: 1200
+    quantity: 50
+    category_id: 1
+  - id: 3
+    name: Ручка
+    price: 50
+    quantity: 200
+    category_id: 2
+  - id: 4
+    name: Средство для мытья
+    price: 350
+    quantity: 40
+    category_id: 3
+  - id: 5
+    name: kmfwsaak
+    price: 2
+    quantity: 3
+    category_id: 3

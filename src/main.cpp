@@ -3,8 +3,12 @@
 #include <vector>
 #include <sqlite3.h>
 #include <iomanip>
+#include <fstream>
+#include <filesystem>
+#include "json.hpp" // Библиотека для JSON
 
 using namespace std;
+using json = nlohmann::json;
 
 // ==========================================
 // 1. МОДЕЛИ ДАННЫХ (Models)
@@ -17,19 +21,10 @@ struct Product {
     int category_id;
 };
 
-struct Operation {
-    int id;
-    int product_id;
-    int sklad_id;
-    int type; // 0 - income, 1 - outcome
-    int quantity;
-    string date;
-};
-
 struct User {
     int id;
     string login;
-    string role; // "admin" или "sklad"
+    string role; 
 };
 
 // ==========================================
@@ -44,7 +39,6 @@ void initDB() {
     }
 }
 
-// Получить все товары
 vector<Product> getAllProducts() {
     vector<Product> list;
     string sql = "SELECT id, name, price, quantity, category_id FROM Product;";
@@ -64,7 +58,6 @@ vector<Product> getAllProducts() {
     return list;
 }
 
-// Добавить товар
 void addProduct(const string& name, double price, int qty, int cat_id) {
     string sql = "INSERT INTO Product (name, price, quantity, category_id) VALUES (?, ?, ?, ?);";
     sqlite3_stmt* stmt;
@@ -77,7 +70,6 @@ void addProduct(const string& name, double price, int qty, int cat_id) {
     sqlite3_finalize(stmt);
 }
 
-// Обновить количество (приход/расход)
 void updateQuantity(int product_id, int delta) {
     string sql = "UPDATE Product SET quantity = quantity + ? WHERE id = ?;";
     sqlite3_stmt* stmt;
@@ -88,7 +80,6 @@ void updateQuantity(int product_id, int delta) {
     sqlite3_finalize(stmt);
 }
 
-// Записать операцию
 void addOperation(int product_id, int sklad_id, int type, int qty) {
     string sql = "INSERT INTO Operation (product_id, sklad_id, type, quantity, date) VALUES (?, ?, ?, ?, date('now'));";
     sqlite3_stmt* stmt;
@@ -101,7 +92,6 @@ void addOperation(int product_id, int sklad_id, int type, int qty) {
     sqlite3_finalize(stmt);
 }
 
-// Авторизация
 User login(string login, string password) {
     User u = {-1, "", ""};
     string sqlAdmin = "SELECT id, login FROM Admin WHERE login=? AND password=?;";
@@ -131,7 +121,6 @@ User login(string login, string password) {
         return u;
     }
     sqlite3_finalize(stmt);
-    
     return u;
 }
 
@@ -166,6 +155,70 @@ void serviceOperation(int sklad_id, int type) {
 }
 
 // ==========================================
+// 5. ЭКСПОРТ ДАННЫХ (Lab 5)
+// ==========================================
+void exportData() {
+    vector<Product> products = getAllProducts();
+    
+    // Создаем папку out, если ее нет
+    if (!filesystem::exists("out")) {
+        filesystem::create_directory("out");
+    }
+
+    // 1. JSON
+    json j = json::array();
+    for (auto& p : products) {
+        j.push_back({
+            {"id", p.id},
+            {"name", p.name},
+            {"price", p.price},
+            {"quantity", p.quantity},
+            {"category_id", p.category_id}
+        });
+    }
+    ofstream f_json("out/data.json");
+    f_json << j.dump(4);
+    f_json.close();
+
+    // 2. CSV
+    ofstream f_csv("out/data.csv");
+    f_csv << "id,name,price,quantity,category_id\n";
+    for (auto& p : products) {
+        f_csv << p.id << "," << p.name << "," << p.price << "," << p.quantity << "," << p.category_id << "\n";
+    }
+    f_csv.close();
+
+    // 3. XML
+    ofstream f_xml("out/data.xml");
+    f_xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<products>\n";
+    for (auto& p : products) {
+        f_xml << "  <product>\n";
+        f_xml << "    <id>" << p.id << "</id>\n";
+        f_xml << "    <name>" << p.name << "</name>\n";
+        f_xml << "    <price>" << p.price << "</price>\n";
+        f_xml << "    <quantity>" << p.quantity << "</quantity>\n";
+        f_xml << "    <category_id>" << p.category_id << "</category_id>\n";
+        f_xml << "  </product>\n";
+    }
+    f_xml << "</products>\n";
+    f_xml.close();
+
+    // 4. YAML
+    ofstream f_yaml("out/data.yaml");
+    f_yaml << "products:\n";
+    for (auto& p : products) {
+        f_yaml << "  - id: " << p.id << "\n";
+        f_yaml << "    name: " << p.name << "\n";
+        f_yaml << "    price: " << p.price << "\n";
+        f_yaml << "    quantity: " << p.quantity << "\n";
+        f_yaml << "    category_id: " << p.category_id << "\n";
+    }
+    f_yaml.close();
+
+    cout << "Data exported to out/ (JSON, CSV, XML, YAML)" << endl;
+}
+
+// ==========================================
 // 4. ПОЛЬЗОВАТЕЛЬСКИЙ ИНТЕРФЕЙС (UI)
 // ==========================================
 void printProducts() {
@@ -181,12 +234,13 @@ void menuAdmin(User u) {
     int choice;
     while (true) {
         cout << "\n=== ADMIN MENU (" << u.login << ") ===\n";
-        cout << "1. Show products\n2. Add product\n3. Income\n4. Outcome\n0. Exit\n";
+        cout << "1. Show products\n2. Add product\n3. Income\n4. Outcome\n5. Export Data \n0. Exit\n";
         cout << "Choice: "; cin >> choice;
         if (choice == 1) printProducts();
         else if (choice == 2) serviceAddProduct();
         else if (choice == 3) serviceOperation(u.id, 0);
         else if (choice == 4) serviceOperation(u.id, 1);
+        else if (choice == 5) exportData();
         else if (choice == 0) break;
     }
 }
@@ -195,18 +249,18 @@ void menuSklad(User u) {
     int choice;
     while (true) {
         cout << "\n=== STOREKEEPER MENU (" << u.login << ") ===\n";
-        cout << "1. Show products\n2. Income \n3. Outcome\n0. Exit\n";
+        cout << "1. Show products\n2. Income\n3. Outcome\n4. Export Data \n0. Exit\n";
         cout << "Choice: "; cin >> choice;
         if (choice == 1) printProducts();
         else if (choice == 2) serviceOperation(u.id, 0);
         else if (choice == 3) serviceOperation(u.id, 1);
+        else if (choice == 4) exportData();
         else if (choice == 0) break;
     }
 }
 
 int main() {
     initDB();
-    
     string log, pass;
     cout << "=== WAREHOUSE SYSTEM ===\n";
     cout << "Login: "; cin >> log;
@@ -222,5 +276,5 @@ int main() {
     else menuSklad(user);
     
     sqlite3_close(db);
-   return 0;
+    return 0;
 }

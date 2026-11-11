@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product>
+    <id>1</id>
+    <name>Ноутбук</name>
+    <price>55000</price>
+    <quantity>10</quantity>
+    <category_id>1</category_id>
+  </product>
+  <product>
+    <id>2</id>
+    <name>Мышь</name>
+    <price>1200</price>
+    <quantity>50</quantity>
+    <category_id>1</category_id>
+  </product>
+  <product>
+    <id>3</id>
+    <name>Ручка</name>
+    <price>50</price>
+    <quantity>200</quantity>
+    <category_id>2</category_id>
+  </product>
+  <product>
+    <id>4</id>
+    <name>Средство для мытья</name>
+    <price>350</price>
+    <quantity>40</quantity>
+    <category_id>3</category_id>
+  </product>
+  <product>
+    <id>5</id>
+    <name>kmfwsaak</name>
+    <price>2</price>
+    <quantity>3</quantity>
+    <category_id>3</category_id>
+  </product>
+</products>
