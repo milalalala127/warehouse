@@ -2,17 +2,24 @@
 !theme plain
 skinparam linetype ortho
 
+entity "Admin" as admin {
+  * id : INTEGER <<PK>>
+  --
+  * login : TEXT
+  * password : TEXT
+}
+
+entity "Sklad" as sklad {
+  * id : INTEGER <<PK>>
+  --
+  * login : TEXT
+  * password : TEXT
+}
+
 entity "Category" as cat {
   * id : INTEGER <<PK>>
   --
   * name : TEXT
-}
-
-entity "Supplier" as sup {
-  * id : INTEGER <<PK>>
-  --
-  * name : TEXT
-  * phone : TEXT
 }
 
 entity "Product" as prod {
@@ -22,20 +29,20 @@ entity "Product" as prod {
   * price : REAL
   * quantity : INTEGER
   * category_id : INTEGER <<FK>>
-  * supplier_id : INTEGER <<FK>>
 }
 
 entity "Operation" as op {
   * id : INTEGER <<PK>>
   --
   * product_id : INTEGER <<FK>>
-  * type : TEXT
+  * sklad_id : INTEGER <<FK>>
+  * type : BOOLEAN
   * quantity : INTEGER
   * date : TEXT
 }
 
 cat ||--o{ prod : "1:N"
-sup ||--o{ prod : "1:N"
 prod ||--o{ op : "1:N"
+sklad ||--o{ op : "1:N"
 
 @enduml
