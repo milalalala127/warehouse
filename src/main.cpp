@@ -6,6 +6,7 @@
 #include <fstream>
 #include <filesystem>
 #include "json.hpp" // Библиотека для JSON
+#include <windows.h>
 
 using namespace std;
 using json = nlohmann::json;
@@ -260,6 +261,8 @@ void menuSklad(User u) {
 }
 
 int main() {
+    SetConsoleOutputCP(65001); 
+    SetConsoleCP(65001);   
     initDB();
     string log, pass;
     cout << "=== WAREHOUSE SYSTEM ===\n";

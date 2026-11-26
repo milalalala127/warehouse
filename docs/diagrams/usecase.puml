@@ -1,29 +1,29 @@
 ﻿@startuml
 left to right direction
 
-actor "Кладовщик" as Sklad
-actor "Администратор" as Admin
+actor "Storekeeper" as Sklad
+actor "Administrator" as Admin
 
-rectangle "Система учёта товаров" {
-    usecase "Вход в систему" as UC_Login
+rectangle "Inventory Management System" {
+    usecase "Login" as UC_Login
     
-    ' Действия кладовщика
-    usecase "Просмотр списка товаров" as UC_View
-    usecase "Приход товара" as UC_In
-    usecase "Расход товара" as UC_Out
-    usecase "Поиск товара по названию" as UC_Search
+    ' Storekeeper actions
+    usecase "View product list" as UC_View
+    usecase "Receive goods" as UC_In
+    usecase "Issue goods" as UC_Out
+    usecase "Search product by name" as UC_Search
     
-    ' Действия администратора
-    usecase "Добавление товара" as UC_Add
-    usecase "Удаление товара" as UC_Del
-    usecase "Отчёт «мало на складе»" as UC_Report
-    usecase "Добавление кладовщика" as UC_AddSklad
+    ' Administrator actions
+    usecase "Add product" as UC_Add
+    usecase "Delete product" as UC_Del
+    usecase "Low stock report" as UC_Report
+    usecase "Add storekeeper" as UC_AddSklad
 }
 
 Sklad -- UC_Login
 Admin -- UC_Login
 
-' От входа ко всем действиям
+' From login to all actions
 UC_Login -- UC_View
 UC_Login -- UC_In
 UC_Login -- UC_Out

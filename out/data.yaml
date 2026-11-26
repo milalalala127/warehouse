@@ -1,21 +1,21 @@
 products:
   - id: 1
-    name: Ноутбук
+    name: Laptop
     price: 55000
     quantity: 10
     category_id: 1
   - id: 2
-    name: Мышь
+    name: Mouse
     price: 1200
     quantity: 50
     category_id: 1
   - id: 3
-    name: Ручка
+    name: Pen
     price: 50
     quantity: 200
     category_id: 2
   - id: 4
-    name: Средство для мытья
+    name: Dishwashing liquid
     price: 350
     quantity: 40
     category_id: 3

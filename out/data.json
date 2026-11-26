@@ -2,28 +2,28 @@
     {
         "category_id": 1,
         "id": 1,
-        "name": "Ноутбук",
+        "name": "Laptop",
         "price": 55000.0,
         "quantity": 10
     },
     {
         "category_id": 1,
         "id": 2,
-        "name": "Мышь",
+        "name": "Mouse",
         "price": 1200.0,
         "quantity": 50
     },
     {
         "category_id": 2,
         "id": 3,
-        "name": "Ручка",
+        "name": "Pen",
         "price": 50.0,
         "quantity": 200
     },
     {
         "category_id": 3,
         "id": 4,
-        "name": "Средство для мытья",
+        "name": "Dishwashing liquid",
         "price": 350.0,
         "quantity": 40
     },
